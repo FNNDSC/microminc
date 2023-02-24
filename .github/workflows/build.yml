@@ -54,9 +54,11 @@ jobs:
           context: .
           file: ./Dockerfile
           tags: |
-            localhost:5000/fnndsc/microminc-builder
-            docker.io/fnndsc/microminc-builder
-            ghcr.io/fnndsc/microminc-builder
+            localhost:5000/fnndsc/microminc-builder:latest
+            docker.io/fnndsc/microminc-builder:latest
+            docker.io/fnndsc/microminc-builder:2.1.1
+            ghcr.io/fnndsc/microminc-builder:latest
+            ghcr.io/fnndsc/microminc-builder:2.1.1
           platforms: linux/amd64,linux/arm64,linux/ppc64le
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
