@@ -14,7 +14,7 @@ fi
 # ==========
 
 function mni_libs_of () {
-  ldd $(which adapt_object_mesh) | grep -oe "$MNIBASEPATH/lib/.* "
+  ldd $(which $1) | grep -oe "$MNIBASEPATH/lib/.* "
 }
 
 # ARGUMENTS
