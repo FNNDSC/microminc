@@ -43,5 +43,7 @@ for prog in "$@"; do
   fi
 
   mni_libs_of "$prog" | xargs cp -vut "$output_dir/lib"
-  cp -vu "$(which $prog)" "$output_dir/bin"
+  dst="$output_dir/bin/$prog"
+  cp -vu "$(which $prog)" "$dst"
+  strip --verbose "$dst"
 done
