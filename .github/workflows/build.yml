@@ -63,7 +63,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Test
         run: |
-          docker run --rm -it \
+          docker run --rm \
             -v "$PWD/test.sh:/test.sh:ro" \
             localhost:5000/fnndsc/microminc-builder:latest /test.sh
 
