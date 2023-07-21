@@ -8,3 +8,4 @@ It is hard-coded to work with MNI software. It is useful for minimizing OCI imag
 
 - https://github.com/FNNDSC/pl-nii2mnc/tree/main/base
 - https://github.com/FNNDSC/pl-bichamfer/tree/main/base
+- https://github.com/FNNDSC/pl-fetal-surface-extract/tree/main/base (includes Perl scripts and data models)
