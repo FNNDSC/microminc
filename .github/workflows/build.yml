@@ -9,14 +9,27 @@ jobs:
     name: Build
     runs-on: ubuntu-22.04
 
-    # A local registry helps us reuse the built image between steps
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-
     steps:
+      - name: Stop docker
+        run: sudo systemctl stop docker
+      - name: Clean docker data
+        run: |
+          sudo rm -rf /var/lib/docker
+          sudo mkdir /var/lib/docker
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@6ae56c86ea8db291ae39f62352a412c36ab8179b
+        with:
+          root-reserve-mb: 8192  # space needed for logs
+          swap-size-mb: 1        # must be >0
+          build-mount-path: /var/lib/docker
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'false'
+      - name: Start docker
+        run: sudo systemctl start docker
+
       - uses: actions/checkout@v3
 
         # QEMU is used for non-x86_64 builds
@@ -34,6 +47,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Local registry
+        run: docker run --rm -d -p 5000:5000 registry:2
       - name: Build
         uses: docker/build-push-action@v3
         id: docker_build
@@ -48,7 +63,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Test
         run: |
-          podman run --rm -it \
+          docker run --rm -it \
             -v "$PWD/test.sh:/test.sh:ro" \
             localhost:5000/fnndsc/microminc-builder:latest /test.sh
 
