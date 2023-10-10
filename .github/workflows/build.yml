@@ -36,7 +36,8 @@ jobs:
       - uses: docker/setup-qemu-action@v3
         # buildx adds additional features to docker build
       - uses: docker/setup-buildx-action@v3
-
+        with:
+          driver-opts: network=host
       - name: Run local registry
         run: docker run --rm -d -p 5000:5000 registry:2
       - name: Build
