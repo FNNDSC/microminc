@@ -26,7 +26,7 @@ fi
 
 # (bin_name) -> list<str>
 function mni_libs_of () {
-  ldd $(which $1) | grep -oe "$MNIBASEPATH/lib/.* "
+  ldd $(which $1) | grep -oe "$MNIBASEPATH/lib/.* " || echo 2> /dev/null
 }
 
 # (script_name.pl &do_cmd) -> list<str>
@@ -93,10 +93,13 @@ for prog in "${perl_scripts[@]}"; do
 done
 
 for prog in "${bin_progs[@]}"; do
-  mni_libs_of "$prog" | xargs cp -vut "$output_dir/lib"
+  libs="$(mni_libs_of "$prog")"
+  if [ -n "$libs" ]; then
+    cp -vu $libs "$output_dir/lib"
+  fi
   dst="$output_dir/bin/$(basename $prog)"
   cp -vu "$(which $prog)" "$dst"
-  strip --verbose "$dst"
+  strip --verbose "$dst" || echo "not stripping $dst"
 done
 
 if [ -n "$(find "$output_dir/bin" -name '*.pl' | head)" ]; then
