@@ -88,3 +88,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           short-description: Minimize images of CIVET + MINC tools
           readme-filepath: ./README.md
+          repository: fnndsc/microminc-builder
