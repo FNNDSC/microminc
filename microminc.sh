@@ -40,6 +40,14 @@ function called_bins_of () {
     | grep "$MNIBASEPATH/bin"
 }
 
+function is_perl_script () {
+  file "$(which "$1")" | grep -q 'Perl script text executable'
+}
+
+function should_strip () {
+  file "$(which "$1")" | grep -q 'ELF .* executable.*not stripped'
+}
+
 # ARGUMENTS
 # ==========
 
@@ -75,7 +83,7 @@ perl_scripts=()
 for prog in "$@"; do
   if [ "$prog" = "$last_arg" ]; then
     break
-  elif [[ "$prog" = *.pl ]]; then
+  elif is_perl_script "$prog"; then
     perl_scripts+=("$prog")
   else
     bin_progs+=("$prog")
@@ -99,7 +107,10 @@ for prog in "${bin_progs[@]}"; do
   fi
   dst="$output_dir/bin/$(basename $prog)"
   cp -vu "$(which $prog)" "$dst"
-  strip --verbose "$dst" || echo "not stripping $dst"
+
+  if should_strip "$dst"; then
+    strip --verbose "$dst"
+  fi
 done
 
 if [ -n "$(find "$output_dir/bin" -name '*.pl' | head)" ]; then

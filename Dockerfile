@@ -2,7 +2,7 @@
 FROM docker.io/fnndsc/civet:unofficial
 
 RUN apt-get update \
-    && apt-get install -y binutils
+    && apt-get install -y binutils file
 
 COPY microminc.sh /usr/local/bin/microminc.sh
 
