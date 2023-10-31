@@ -97,7 +97,10 @@ for prog in "${perl_scripts[@]}"; do
   fi
   dst="$output_dir/bin/$(basename $prog)"
   cp -vu "$(which $prog)" "$dst"
-  bin_progs+=( $(called_bins_of "$prog" "$perl_cmd_func") )
+
+  if [ -n "$perl_cmd_func" ]; then
+    bin_progs+=( $(called_bins_of "$prog" "$perl_cmd_func") )
+  fi
 done
 
 for prog in "${bin_progs[@]}"; do
